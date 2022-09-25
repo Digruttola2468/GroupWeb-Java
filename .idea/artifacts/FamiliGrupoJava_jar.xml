@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="FamiliGrupoJava:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/FamiliGrupoJava_jar</output-path>
+    <root id="archive" name="FamiliGrupoJava.jar">
+      <element id="module-output" name="FamiliGrupoJava" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/lib/mysql-connector-java-8.0.28.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

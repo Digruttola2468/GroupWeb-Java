@@ -2,6 +2,7 @@ package controler;
 
 import modulos.Jugadores;
 
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -71,6 +72,7 @@ public class JugadoresBBDD {
                 ps.setString(2, apellido);
                 ps.executeUpdate();
                 System.out.println("Jugador creado");
+                JOptionPane.showMessageDialog(null,"Jugador Creado");
 
             } catch (SQLException e) {
                 System.out.println(e);

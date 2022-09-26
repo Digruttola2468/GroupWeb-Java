@@ -32,7 +32,7 @@ public class ViewGetEquipo extends JFrame implements ActionListener{
         listPlayerBBDD = listPlayer;
 
         this.setLocationRelativeTo(null);
-        this.setSize(750,400);
+        this.setSize(700,500);
         this.setResizable(true);
         this.setDefaultCloseOperation(3);
         this.setTitle("Equipo");
@@ -89,7 +89,7 @@ public class ViewGetEquipo extends JFrame implements ActionListener{
 
         JList list = new JList(listModelEquipos);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        list.setVisibleRowCount(5);
+        list.setVisibleRowCount(10);
 
         JScrollPane listScrollPane = new JScrollPane(list);
 
@@ -178,6 +178,7 @@ public class ViewGetEquipo extends JFrame implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         if("get Equipos".equals(e.getActionCommand())){
+            listModelEquipos.clear();
             for (int i = 0; i < listEquiposBBDD.size(); i++) {
                 int id = listEquiposBBDD.get(i).getIdequipo();
                 String club = listEquiposBBDD.get(i).getNombreEquipo();
@@ -187,6 +188,7 @@ public class ViewGetEquipo extends JFrame implements ActionListener{
             }
         }
         if("get Players".equals(e.getActionCommand())){
+            listModelPlayer.clear();
             for (int i = 0; i < listPlayerBBDD.size(); i++) {
                 int id = listPlayerBBDD.get(i).getIdjugadores();
                 String nombre = listPlayerBBDD.get(i).getNombre();
@@ -206,8 +208,8 @@ public class ViewGetEquipo extends JFrame implements ActionListener{
         }
 
         if("get player use team".equals(e.getActionCommand())){
-
-            area.append("--------------- \n");
+            area.setText("");
+            area.append("------------------------------ \n");
             area.append("Jugador: ");
 
             int idNombre = comboBoxPlayer.getSelectedIndex() + 1;
@@ -227,16 +229,41 @@ public class ViewGetEquipo extends JFrame implements ActionListener{
             }
 
             int partidosJugados = 0;
+            int partidosGanados = 0;
+            int partidosPerdidos = 0;
+            int partidosEmpatados = 0;
             for (int i = 0; i < listPartidosBBDD.size(); i++) {
-                if(listPartidosBBDD.get(i).getNombreLocal() == idNombre || listPartidosBBDD.get(i).getNombreVisitante() == idNombre){
-                    if(listPartidosBBDD.get(i).getEquipoLocal() == idEquipo || listPartidosBBDD.get(i).getEquipoVisitante() == idEquipo){
-                        partidosJugados++;
-                        System.out.println(partidosJugados);
+
+                //Partidos Jugados
+                if( (listPartidosBBDD.get(i).getNombreLocal() == idNombre && listPartidosBBDD.get(i).getEquipoLocal() == idEquipo) ||
+                        (listPartidosBBDD.get(i).getNombreVisitante() == idNombre && listPartidosBBDD.get(i).getEquipoVisitante() == idEquipo) ) {
+                    partidosJugados++;
+
+                    if(listPartidosBBDD.get(i).getNombreLocal() == idNombre && listPartidosBBDD.get(i).getEquipoLocal() == idEquipo){
+                        if( listPartidosBBDD.get(i).getResultadoLocal() > listPartidosBBDD.get(i).getResultadoVisitante() ){
+                            partidosGanados++;
+                        }
                     }
+                    if(listPartidosBBDD.get(i).getNombreVisitante() == idNombre && listPartidosBBDD.get(i).getEquipoVisitante() == idEquipo){
+                        if( listPartidosBBDD.get(i).getResultadoVisitante() > listPartidosBBDD.get(i).getResultadoLocal() ){
+                            partidosGanados++;
+                        }
+                    }
+                    if( listPartidosBBDD.get(i).getResultadoVisitante() == listPartidosBBDD.get(i).getResultadoLocal() ){
+                        partidosEmpatados++;
+                    }
+
                 }
             }
+
+            partidosPerdidos = partidosJugados - partidosGanados - partidosEmpatados;
+
             area.append("\n");
             area.append("Jugados: " + partidosJugados + " partidos \n");
+            area.append("Ganados: " + partidosGanados + "\n");
+            area.append("Perdidos: " + partidosPerdidos + "\n");
+            area.append("Empatados: " + partidosEmpatados + "\n");
+            area.append("------------------------------ \n");
         }
     }
 }

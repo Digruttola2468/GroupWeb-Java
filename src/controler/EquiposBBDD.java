@@ -3,6 +3,7 @@ package controler;
 import modulos.Equipos;
 import modulos.Jugadores;
 
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -59,5 +60,29 @@ public class EquiposBBDD {
             return null;
         }
         return null;
+    }
+
+    public static boolean addEquipo(String nombre){
+        Conexion db_connect = new Conexion();
+        try (Connection con = db_connect.get_connection()) {
+            PreparedStatement ps = null;
+            try {
+                String query = "INSERT INTO equipo (`nombre_equipo`) VALUES (?);";
+                ps = con.prepareStatement(query);
+                ps.setString(1, nombre);
+
+                ps.executeUpdate();
+                System.out.println("Equipo creado");
+
+                JOptionPane.showMessageDialog(null,"Equipo Creado");
+                return true;
+            } catch (SQLException e) {
+                System.out.println(e);
+                return false;
+            }
+        } catch (SQLException e) {
+            System.err.println(e);
+            return false;
+        }
     }
 }

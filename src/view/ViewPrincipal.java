@@ -42,9 +42,10 @@ public class ViewPrincipal extends JFrame implements ActionListener , ListSelect
     public ViewPrincipal() {
         setLayout(new BorderLayout(10,20));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800,500);
-        setMinimumSize(new Dimension(800,500));
+        setSize(600,500);
+        setMinimumSize(new Dimension(600,500));
         setLocationRelativeTo(null);
+        setTitle("Principal");
 
         menu();
 
@@ -149,7 +150,6 @@ public class ViewPrincipal extends JFrame implements ActionListener , ListSelect
         JLabel jLabel = new JLabel(" VS ");
         visitante = new JComboBox();
 
-
         for (int i = 0; i < listPlayerBBDD.size(); i++) {
             local.addItem(listPlayerBBDD.get(i).getNombre());
             visitante.addItem(listPlayerBBDD.get(i).getNombre());
@@ -161,14 +161,14 @@ public class ViewPrincipal extends JFrame implements ActionListener , ListSelect
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if( e.getStateChange() == 2){
-                    listModelGetPartidos.clear();
+                    listModelGetEnfrentamientos.clear();
 
-                    if(listEnfrentamientosBBDD == null)
+                    if(listEnfrentamientosBBDD != null)
                         getOther(listEnfrentamientosBBDD,listModelGetEnfrentamientos);
                 }
                 else if(e.getStateChange() == 1) {
-                    listModelGetPartidos.clear();
-                    if(listEnfrentamientosBBDD == null)
+                    listModelGetEnfrentamientos.clear();
+                    if(listEnfrentamientosBBDD != null)
                         getOtherTeams(listEnfrentamientosBBDD,listModelGetEnfrentamientos);
                 }
             }
@@ -238,15 +238,16 @@ public class ViewPrincipal extends JFrame implements ActionListener , ListSelect
         btGetPartidos.setActionCommand("get partidos a player");
         btGetPartidos.addActionListener(this);
 
-        JCheckBox cb_Win = new JCheckBox("Win");
-        JCheckBox cb_Lose = new JCheckBox("Lose");
-        JCheckBox cb_empate = new JCheckBox("Empate");
+        //JCheckBox cb_Win = new JCheckBox("Win");
+        //JCheckBox cb_Lose = new JCheckBox("Lose");
+        //JCheckBox cb_empate = new JCheckBox("Empate");
+
 
         container.add(comboBox);
         container.add(btGetPartidos);
-        container.add(cb_Win);
-        container.add(cb_Lose);
-        container.add(cb_empate);
+        //container.add(cb_Win);
+        //container.add(cb_Lose);
+        //container.add(cb_empate);
 
         jPanel.add(listScrollPane, BorderLayout.CENTER);
         jPanel.add(container, BorderLayout.PAGE_START);

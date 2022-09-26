@@ -1,5 +1,7 @@
 package view;
 
+import controler.EquiposBBDD;
+import controler.JugadoresBBDD;
 import controler.PartidosBBDD;
 import modulos.Equipos;
 import modulos.Jugadores;
@@ -15,11 +17,16 @@ import java.util.ArrayList;
 
 public class ViewAddPartidos extends JFrame implements ActionListener{
 
-    //Add partidos
+    //PANEL: Add partidos
     private JTextField txtResultadoLocal,txtResultadoVisitante;
     private JComboBox cb_nameLocal,cb_equipoLocal,cb_nameVisitante,cb_equipoVisitante;
     private JButton btGuardar;
 
+    //PANEL:
+    private JTextField txtNombreClub;
+
+    //PANEL:
+    private JTextField txtApellido, txtName;
 
     private static ArrayList<Jugadores> playersListBBDD; //
     private static ArrayList<Equipos> teamsListBBDD; //
@@ -131,7 +138,8 @@ public class ViewAddPartidos extends JFrame implements ActionListener{
         component.setLayout(new FlowLayout());
 
         JLabel lbEquipo = new JLabel("Club: ");
-        JTextField txtEquipo = new JTextField("",12);
+        txtNombreClub = new JTextField("",12);
+
         JButton jButton = new JButton("Guardar Club");
         jButton.addActionListener(this);
         jButton.setActionCommand("Guardar Club");
@@ -140,7 +148,7 @@ public class ViewAddPartidos extends JFrame implements ActionListener{
         lbEquipo.setFont(new Font(Font.MONOSPACED, Font.PLAIN,16));
 
         component.add(lbEquipo);
-        component.add(txtEquipo);
+        component.add(txtNombreClub);
 
         panelEquipo.add(component, BorderLayout.PAGE_START);
         panelEquipo.add(jButton, BorderLayout.PAGE_END);
@@ -166,14 +174,14 @@ public class ViewAddPartidos extends JFrame implements ActionListener{
         JLabel lbName = new JLabel("Nombre: ");
         container.add(lbName);
 
-        JTextField txtName = new JTextField(7);
+        txtName = new JTextField(7);
         container.add(txtName);
 
 
         JLabel lbApellido = new JLabel("Apellido: ");
         container1.add(lbApellido);
 
-        JTextField txtApellido = new JTextField(7);
+        txtApellido = new JTextField(7);
         container1.add(txtApellido);
 
         JButton jButton = new JButton("Guardar Jugador");
@@ -224,10 +232,17 @@ public class ViewAddPartidos extends JFrame implements ActionListener{
 
         }
         if( "Guardar Club".equals(e.getActionCommand())){
-            System.out.println("Guardando Club");
+            String nombre = txtNombreClub.getText().toString();
+            if(!nombre.equals("")) {
+                EquiposBBDD.addEquipo(nombre);
+            }
         }
         if( "Guardar Jugador".equals(e.getActionCommand())){
-            System.out.println("Guardando Jugador");
+            String nombre = txtName.getText().toString();
+            String apellido = txtApellido.getText().toString();
+            if(!nombre.equals("") && !apellido.equals("")) {
+                JugadoresBBDD.addPlayer(nombre,apellido);
+            }
         }
         if ("back".equals(e.getActionCommand())){
             this.setVisible(false);

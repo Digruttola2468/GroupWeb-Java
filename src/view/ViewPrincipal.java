@@ -32,6 +32,7 @@ public class ViewPrincipal extends JFrame implements ActionListener , ListSelect
     //PANEL:
     private JComboBox comboBox ;
     private DefaultListModel listModel;
+    private JRadioButton rdWin,rdLose ,rdEmpate;
 
     private static final ArrayList<Partidos> listPartidosBBDD =  PartidosBBDD.readPartidos(); //
     private static final ArrayList<Equipos> listEquiposBBDD =  EquiposBBDD.readAllTeams();    //
@@ -42,8 +43,8 @@ public class ViewPrincipal extends JFrame implements ActionListener , ListSelect
     public ViewPrincipal() {
         setLayout(new BorderLayout(10,20));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(600,500);
-        setMinimumSize(new Dimension(600,500));
+        setSize(800,500);
+        setMinimumSize(new Dimension(750,500));
         setLocationRelativeTo(null);
         setTitle("Principal");
 
@@ -238,16 +239,27 @@ public class ViewPrincipal extends JFrame implements ActionListener , ListSelect
         btGetPartidos.setActionCommand("get partidos a player");
         btGetPartidos.addActionListener(this);
 
-        //JCheckBox cb_Win = new JCheckBox("Win");
-        //JCheckBox cb_Lose = new JCheckBox("Lose");
-        //JCheckBox cb_empate = new JCheckBox("Empate");
+        rdWin = new JRadioButton("Win");
+        rdWin.setActionCommand("Radio Button WIN");
+        rdEmpate = new JRadioButton("Empate");
+        rdEmpate.setActionCommand("Radio Button Empate");
+        rdLose = new JRadioButton("Lose");
+        rdLose.setActionCommand("Radio Button Lose");
 
+        rdWin.addActionListener(this);
+        rdEmpate.addActionListener(this);
+        rdLose.addActionListener(this);
+
+        ButtonGroup group = new ButtonGroup();
+        group.add(rdWin);
+        group.add(rdEmpate);
+        group.add(rdLose);
 
         container.add(comboBox);
         container.add(btGetPartidos);
-        //container.add(cb_Win);
-        //container.add(cb_Lose);
-        //container.add(cb_empate);
+        container.add(rdWin);
+        container.add(rdEmpate);
+        container.add(rdLose);
 
         jPanel.add(listScrollPane, BorderLayout.CENTER);
         jPanel.add(container, BorderLayout.PAGE_START);
@@ -286,7 +298,9 @@ public class ViewPrincipal extends JFrame implements ActionListener , ListSelect
         if("get partidos a player".equals(e.getActionCommand())){
             int idNombre = comboBox.getSelectedIndex() + 1;
             listModel.clear();
-
+            rdWin.setSelected(false);
+            rdEmpate.setSelected(false);
+            rdLose.setSelected(false);
             getResult(listPartidosBBDD, listModel,idNombre);
         }
         if("Go to add Partidos".equals(e.getActionCommand())){
@@ -296,6 +310,114 @@ public class ViewPrincipal extends JFrame implements ActionListener , ListSelect
         if("Go to Clubes/Players".equals(e.getActionCommand())){
             this.setVisible(false);
             new ViewGetEquipo(listPartidosBBDD,listEquiposBBDD,listPlayerBBDD).setVisible(true);
+        }
+        if("Radio Button WIN".equals(e.getActionCommand())){
+            int idNombre = comboBox.getSelectedIndex() + 1;
+            listModel.clear();
+            for (int i = 0; i < listPartidosBBDD.size(); i++) {
+
+                if(listPartidosBBDD.get(i).getNombreLocal() == idNombre ){
+                    if(listPartidosBBDD.get(i).getResultadoLocal() > listPartidosBBDD.get(i).getResultadoVisitante()){
+                        int idNombreLocal1 = listPartidosBBDD.get(i).getNombreLocal();
+                        int resultadoLocal = listPartidosBBDD.get(i).getResultadoLocal();
+                        int resultadoVisitante = listPartidosBBDD.get(i).getResultadoVisitante();
+                        int idNombreVisitante1 = listPartidosBBDD.get(i).getNombreVisitante();
+
+                        String nombreLocalString = listPlayerBBDD.get(idNombreLocal1-1).getNombre();
+                        String nombreVisitanteString = listPlayerBBDD.get(idNombreVisitante1-1).getNombre();
+
+                        String resultado = nombreLocalString + " " + resultadoLocal + " - " + resultadoVisitante + " " + nombreVisitanteString;
+                        listModel.addElement( resultado);
+                    }
+                }
+                if(listPartidosBBDD.get(i).getNombreVisitante() == idNombre){
+                    if(listPartidosBBDD.get(i).getResultadoVisitante() > listPartidosBBDD.get(i).getResultadoLocal()){
+                        int idNombreLocal1 = listPartidosBBDD.get(i).getNombreLocal();
+                        int resultadoLocal = listPartidosBBDD.get(i).getResultadoLocal();
+                        int resultadoVisitante = listPartidosBBDD.get(i).getResultadoVisitante();
+                        int idNombreVisitante1 = listPartidosBBDD.get(i).getNombreVisitante();
+
+                        String nombreLocalString = listPlayerBBDD.get(idNombreLocal1-1).getNombre();
+                        String nombreVisitanteString = listPlayerBBDD.get(idNombreVisitante1-1).getNombre();
+
+                        String resultado = nombreLocalString + " " + resultadoLocal + " - " + resultadoVisitante + " " + nombreVisitanteString;
+                        listModel.addElement( resultado);
+                    }
+                }
+
+            }
+        }
+        if("Radio Button Empate".equals(e.getActionCommand())){
+            int idNombre = comboBox.getSelectedIndex() + 1;
+            listModel.clear();
+            for (int i = 0; i < listPartidosBBDD.size(); i++) {
+
+                if(listPartidosBBDD.get(i).getNombreLocal() == idNombre ){
+                    if(listPartidosBBDD.get(i).getResultadoLocal() == listPartidosBBDD.get(i).getResultadoVisitante()){
+                        int idNombreLocal1 = listPartidosBBDD.get(i).getNombreLocal();
+                        int resultadoLocal = listPartidosBBDD.get(i).getResultadoLocal();
+                        int resultadoVisitante = listPartidosBBDD.get(i).getResultadoVisitante();
+                        int idNombreVisitante1 = listPartidosBBDD.get(i).getNombreVisitante();
+
+                        String nombreLocalString = listPlayerBBDD.get(idNombreLocal1-1).getNombre();
+                        String nombreVisitanteString = listPlayerBBDD.get(idNombreVisitante1-1).getNombre();
+
+                        String resultado = nombreLocalString + " " + resultadoLocal + " - " + resultadoVisitante + " " + nombreVisitanteString;
+                        listModel.addElement( resultado);
+                    }
+                }
+                if(listPartidosBBDD.get(i).getNombreVisitante() == idNombre){
+                    if(listPartidosBBDD.get(i).getResultadoVisitante() == listPartidosBBDD.get(i).getResultadoLocal()){
+                        int idNombreLocal1 = listPartidosBBDD.get(i).getNombreLocal();
+                        int resultadoLocal = listPartidosBBDD.get(i).getResultadoLocal();
+                        int resultadoVisitante = listPartidosBBDD.get(i).getResultadoVisitante();
+                        int idNombreVisitante1 = listPartidosBBDD.get(i).getNombreVisitante();
+
+                        String nombreLocalString = listPlayerBBDD.get(idNombreLocal1-1).getNombre();
+                        String nombreVisitanteString = listPlayerBBDD.get(idNombreVisitante1-1).getNombre();
+
+                        String resultado = nombreLocalString + " " + resultadoLocal + " - " + resultadoVisitante + " " + nombreVisitanteString;
+                        listModel.addElement( resultado);
+                    }
+                }
+
+            }
+        }
+        if("Radio Button Lose".equals(e.getActionCommand())){
+            int idNombre = comboBox.getSelectedIndex() + 1;
+            listModel.clear();
+            for (int i = 0; i < listPartidosBBDD.size(); i++) {
+
+                if(listPartidosBBDD.get(i).getNombreLocal() == idNombre ){
+                    if(listPartidosBBDD.get(i).getResultadoLocal() < listPartidosBBDD.get(i).getResultadoVisitante()){
+                        int idNombreLocal1 = listPartidosBBDD.get(i).getNombreLocal();
+                        int resultadoLocal = listPartidosBBDD.get(i).getResultadoLocal();
+                        int resultadoVisitante = listPartidosBBDD.get(i).getResultadoVisitante();
+                        int idNombreVisitante1 = listPartidosBBDD.get(i).getNombreVisitante();
+
+                        String nombreLocalString = listPlayerBBDD.get(idNombreLocal1-1).getNombre();
+                        String nombreVisitanteString = listPlayerBBDD.get(idNombreVisitante1-1).getNombre();
+
+                        String resultado = nombreLocalString + " " + resultadoLocal + " - " + resultadoVisitante + " " + nombreVisitanteString;
+                        listModel.addElement( resultado);
+                    }
+                }
+                if(listPartidosBBDD.get(i).getNombreVisitante() == idNombre){
+                    if(listPartidosBBDD.get(i).getResultadoVisitante() < listPartidosBBDD.get(i).getResultadoLocal()){
+                        int idNombreLocal1 = listPartidosBBDD.get(i).getNombreLocal();
+                        int resultadoLocal = listPartidosBBDD.get(i).getResultadoLocal();
+                        int resultadoVisitante = listPartidosBBDD.get(i).getResultadoVisitante();
+                        int idNombreVisitante1 = listPartidosBBDD.get(i).getNombreVisitante();
+
+                        String nombreLocalString = listPlayerBBDD.get(idNombreLocal1-1).getNombre();
+                        String nombreVisitanteString = listPlayerBBDD.get(idNombreVisitante1-1).getNombre();
+
+                        String resultado = nombreLocalString + " " + resultadoLocal + " - " + resultadoVisitante + " " + nombreVisitanteString;
+                        listModel.addElement( resultado);
+                    }
+                }
+
+            }
         }
 
 

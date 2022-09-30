@@ -9,6 +9,8 @@ import java.awt.*;
 import javax.swing.border.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ViewGetEquipo extends JFrame implements ActionListener{
 
@@ -153,6 +155,7 @@ public class ViewGetEquipo extends JFrame implements ActionListener{
             comboBoxPlayer.addItem(listPlayerBBDD.get(i).getNombre());
 
         }
+        comboBoxTeam.addItem("---");
         for (int i = 0; i < listEquiposBBDD.size(); i++) {
             comboBoxTeam.addItem(listEquiposBBDD.get(i).getNombreEquipo());
         }
@@ -213,7 +216,7 @@ public class ViewGetEquipo extends JFrame implements ActionListener{
             area.append("Jugador: ");
 
             int idNombre = comboBoxPlayer.getSelectedIndex() + 1;
-            int idEquipo = comboBoxTeam.getSelectedIndex() + 1;
+            int idEquipo = comboBoxTeam.getSelectedIndex();
 
             for (int i = 0; i < listPlayerBBDD.size(); i++) {
                 if(listPlayerBBDD.get(i).getIdjugadores() == idNombre){
@@ -221,49 +224,133 @@ public class ViewGetEquipo extends JFrame implements ActionListener{
                 }
             }
 
-            area.append("Equipo: ");
-            for (int i = 0; i < listEquiposBBDD.size(); i++) {
-                if(listEquiposBBDD.get(i).getIdequipo() == idEquipo){
-                    area.append(listEquiposBBDD.get(i).getNombreEquipo() + "\n");
+
+            if(idEquipo == 0){
+                Set<Integer> setList = new HashSet<>();
+                System.out.println("No seleccionaste ningun equipo");
+
+                for (int i = 0; i < listPartidosBBDD.size(); i++) {
+                    if(listPartidosBBDD.get(i).getNombreLocal() == idNombre){
+                        System.out.println(listPartidosBBDD.get(i).getEquipoLocal());
+                        setList.add(listPartidosBBDD.get(i).getEquipoLocal());
+                    }
+                    if(listPartidosBBDD.get(i).getNombreVisitante() == idNombre){
+                        System.out.println(listPartidosBBDD.get(i).getEquipoVisitante());
+                        setList.add(listPartidosBBDD.get(i).getEquipoVisitante());
+                    }
                 }
-            }
 
-            int partidosJugados = 0;
-            int partidosGanados = 0;
-            int partidosPerdidos = 0;
-            int partidosEmpatados = 0;
-            for (int i = 0; i < listPartidosBBDD.size(); i++) {
+                int partidosTotal = 0;
+                int partidosGanadosTotal = 0;
+                int partidosPerdidosTotal = 0;
+                int partidosEmpatadosTotal = 0;
 
-                //Partidos Jugados
-                if( (listPartidosBBDD.get(i).getNombreLocal() == idNombre && listPartidosBBDD.get(i).getEquipoLocal() == idEquipo) ||
-                        (listPartidosBBDD.get(i).getNombreVisitante() == idNombre && listPartidosBBDD.get(i).getEquipoVisitante() == idEquipo) ) {
-                    partidosJugados++;
+                int longitud = setList.size();
+                for (int k = 0; k < longitud; k++) {
+                    area.append("Equipo: ");
 
-                    if(listPartidosBBDD.get(i).getNombreLocal() == idNombre && listPartidosBBDD.get(i).getEquipoLocal() == idEquipo){
-                        if( listPartidosBBDD.get(i).getResultadoLocal() > listPartidosBBDD.get(i).getResultadoVisitante() ){
-                            partidosGanados++;
+                    for (int i = 0; i < listEquiposBBDD.size(); i++) {
+                        if(setList.contains(listEquiposBBDD.get(i).getIdequipo())){
+                            area.append(listEquiposBBDD.get(i).getNombreEquipo() + "\n");
+                            idEquipo = listEquiposBBDD.get(i).getIdequipo();
+                            setList.remove(idEquipo);
+                            i = listEquiposBBDD.size();
                         }
                     }
-                    if(listPartidosBBDD.get(i).getNombreVisitante() == idNombre && listPartidosBBDD.get(i).getEquipoVisitante() == idEquipo){
-                        if( listPartidosBBDD.get(i).getResultadoVisitante() > listPartidosBBDD.get(i).getResultadoLocal() ){
-                            partidosGanados++;
+
+                    int partidosJugados = 0;
+                    int partidosGanados = 0;
+                    int partidosEmpatados = 0;
+                    for (int i = 0; i < listPartidosBBDD.size(); i++) {
+
+                        //Partidos Jugados
+                        if( (listPartidosBBDD.get(i).getNombreLocal() == idNombre && listPartidosBBDD.get(i).getEquipoLocal() == idEquipo) ||
+                                (listPartidosBBDD.get(i).getNombreVisitante() == idNombre && listPartidosBBDD.get(i).getEquipoVisitante() == idEquipo) ) {
+                            partidosJugados++;
+
+                            if(listPartidosBBDD.get(i).getNombreLocal() == idNombre && listPartidosBBDD.get(i).getEquipoLocal() == idEquipo){
+                                if( listPartidosBBDD.get(i).getResultadoLocal() > listPartidosBBDD.get(i).getResultadoVisitante() ){
+                                    partidosGanados++;
+                                }
+                            }
+                            if(listPartidosBBDD.get(i).getNombreVisitante() == idNombre && listPartidosBBDD.get(i).getEquipoVisitante() == idEquipo){
+                                if( listPartidosBBDD.get(i).getResultadoVisitante() > listPartidosBBDD.get(i).getResultadoLocal() ){
+                                    partidosGanados++;
+                                }
+                            }
+                            if( listPartidosBBDD.get(i).getResultadoVisitante() == listPartidosBBDD.get(i).getResultadoLocal() ){
+                                partidosEmpatados++;
+                            }
+
                         }
                     }
-                    if( listPartidosBBDD.get(i).getResultadoVisitante() == listPartidosBBDD.get(i).getResultadoLocal() ){
-                        partidosEmpatados++;
-                    }
+
+                    int partidosPerdidos = 0;
+
+                    partidosPerdidos = partidosJugados - partidosGanados - partidosEmpatados;
+
+                    partidosTotal += partidosJugados;
+                    partidosPerdidosTotal += partidosPerdidos;
+                    partidosGanadosTotal += partidosGanados;
+                    partidosEmpatadosTotal += partidosEmpatados;
+
+                    area.append("\n");
+                    area.append("Jugados: " + partidosJugados + " partidos \n");
+                    area.append("Ganados: " + partidosGanados + "\n");
+                    area.append("Perdidos: " + partidosPerdidos + "\n");
+                    area.append("Empatados: " + partidosEmpatados + "\n");
+                    area.append("------------------------------ \n");
+
 
                 }
+                area.append("Total partidos: " + partidosTotal + "\n");
+                area.append("TOTAL GANADOS: " + partidosGanadosTotal+ "\n");
+                area.append("TOTAL EMPATADOS: " + partidosEmpatadosTotal+ "\n");
+                area.append("TOTAL PERDIDOS: " + partidosPerdidosTotal+ "\n");
+            }else {
+                area.append("Equipo: ");
+                for (int i = 0; i < listEquiposBBDD.size(); i++) {
+                    if(listEquiposBBDD.get(i).getIdequipo() == idEquipo){
+                        area.append(listEquiposBBDD.get(i).getNombreEquipo() + "\n");
+                    }
+                }
+
+                int partidosJugados = 0;
+                int partidosGanados = 0;
+                int partidosEmpatados = 0;
+                for (int i = 0; i < listPartidosBBDD.size(); i++) {
+
+                    //Partidos Jugados
+                    if( (listPartidosBBDD.get(i).getNombreLocal() == idNombre && listPartidosBBDD.get(i).getEquipoLocal() == idEquipo) ||
+                            (listPartidosBBDD.get(i).getNombreVisitante() == idNombre && listPartidosBBDD.get(i).getEquipoVisitante() == idEquipo) ) {
+                        partidosJugados++;
+
+                        if(listPartidosBBDD.get(i).getNombreLocal() == idNombre && listPartidosBBDD.get(i).getEquipoLocal() == idEquipo){
+                            if( listPartidosBBDD.get(i).getResultadoLocal() > listPartidosBBDD.get(i).getResultadoVisitante() ){
+                                partidosGanados++;
+                            }
+                        }
+                        if(listPartidosBBDD.get(i).getNombreVisitante() == idNombre && listPartidosBBDD.get(i).getEquipoVisitante() == idEquipo){
+                            if( listPartidosBBDD.get(i).getResultadoVisitante() > listPartidosBBDD.get(i).getResultadoLocal() ){
+                                partidosGanados++;
+                            }
+                        }
+                        if( listPartidosBBDD.get(i).getResultadoVisitante() == listPartidosBBDD.get(i).getResultadoLocal() ){
+                            partidosEmpatados++;
+                        }
+
+                    }
+                }
+
+                int partidosPerdidos = partidosJugados - partidosGanados - partidosEmpatados;
+
+                area.append("\n");
+                area.append("Jugados: " + partidosJugados + " partidos \n");
+                area.append("Ganados: " + partidosGanados + "\n");
+                area.append("Perdidos: " + partidosPerdidos + "\n");
+                area.append("Empatados: " + partidosEmpatados + "\n");
+                area.append("------------------------------ \n");
             }
-
-            partidosPerdidos = partidosJugados - partidosGanados - partidosEmpatados;
-
-            area.append("\n");
-            area.append("Jugados: " + partidosJugados + " partidos \n");
-            area.append("Ganados: " + partidosGanados + "\n");
-            area.append("Perdidos: " + partidosPerdidos + "\n");
-            area.append("Empatados: " + partidosEmpatados + "\n");
-            area.append("------------------------------ \n");
         }
     }
 }
